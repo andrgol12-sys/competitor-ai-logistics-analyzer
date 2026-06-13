@@ -23,3 +23,10 @@ Thumbs.db
 
 # Secrets
 .env
+
+history.json
+desktop/build/
+desktop/dist/
+
+# PyInstaller
+*.spec
