@@ -57,7 +57,7 @@ class Settings(BaseSettings):
     max_history_items: int = 10
     
     # Парсер
-    parser_timeout: int = 10
+    parser_timeout: int = 30
     parser_user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     
     class Config:

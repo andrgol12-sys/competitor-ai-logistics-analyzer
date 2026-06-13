@@ -493,6 +493,14 @@ class MainWindow(QMainWindow):
         title.setObjectName("cardTitle")
         title.setStyleSheet("font-size: 18px; margin-bottom: 16px;")
         self.results_layout.addWidget(title)
+        # Кнопка копирования результата
+        copy_btn = QPushButton("📋 Скопировать результат")
+        copy_btn.setObjectName("secondaryButton")
+        copy_btn.clicked.connect(
+            lambda: self.copy_analysis_to_clipboard(analysis)
+        )
+
+        self.results_layout.addWidget(copy_btn)
         
         if result_type == "text" or result_type == "parse":
             # Сильные стороны
@@ -743,6 +751,43 @@ class MainWindow(QMainWindow):
             api_client.clear_history()
             self.load_history()
     
+    def copy_analysis_to_clipboard(self, analysis: dict):
+        """Копирование результата анализа"""
+
+        text = ""
+
+        names = {
+        "strengths": "СИЛЬНЫЕ СТОРОНЫ",
+        "weaknesses": "СЛАБЫЕ СТОРОНЫ",
+        "unique_offers": "УНИКАЛЬНЫЕ ПРЕДЛОЖЕНИЯ",
+        "recommendations": "РЕКОМЕНДАЦИИ",
+        "summary": "РЕЗЮМЕ",
+        "description": "ОПИСАНИЕ",
+        "marketing_insights": "ИНСАЙТЫ"
+        }
+
+        for key, value in analysis.items():
+            title = names.get(
+                key,
+                key.replace("_", " ").upper()
+            )
+
+            if isinstance(value, list):
+                text += f"\n{title}\n"
+
+                for item in value:
+                    text += f"• {item}\n"
+            else:
+                text += f"\n{title}\n{value}\n"
+
+        QApplication.clipboard().setText(text.strip())
+
+        QMessageBox.information(
+            self,
+            "Готово",
+            "✓ Результат скопирован"
+        )
+        
     def on_error(self, error: str):
         """Обработка ошибки"""
         self.hide_loading()
